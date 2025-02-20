@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		7E03018B2D66E1BB00C9FD42 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 7E03018A2D66E1BB00C9FD42 /* Supabase */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		7E03013D2D66609600C9FD42 /* S-SocialMedia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "S-SocialMedia.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E03018B2D66E1BB00C9FD42 /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +38,7 @@
 			isa = PBXGroup;
 			children = (
 				7E03013F2D66609600C9FD42 /* S-SocialMedia */,
+				7E0301892D66E1BB00C9FD42 /* Frameworks */,
 				7E03013E2D66609600C9FD42 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +49,13 @@
 				7E03013D2D66609600C9FD42 /* S-SocialMedia.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		7E0301892D66E1BB00C9FD42 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -65,6 +78,7 @@
 			);
 			name = "S-SocialMedia";
 			packageProductDependencies = (
+				7E03018A2D66E1BB00C9FD42 /* Supabase */,
 			);
 			productName = "S-SocialMedia";
 			productReference = 7E03013D2D66609600C9FD42 /* S-SocialMedia.app */;
@@ -94,6 +108,9 @@
 			);
 			mainGroup = 7E0301342D66609600C9FD42;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7E0301882D66E1A300C9FD42 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7E03013E2D66609600C9FD42 /* Products */;
 			projectDirPath = "";
@@ -255,6 +272,7 @@
 				DEVELOPMENT_TEAM = 9798UJJCY4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "S Social Media";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -284,6 +302,7 @@
 				DEVELOPMENT_TEAM = 9798UJJCY4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "S Social Media";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -324,6 +343,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7E0301882D66E1A300C9FD42 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7E03018A2D66E1BB00C9FD42 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7E0301882D66E1A300C9FD42 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7E0301352D66609600C9FD42 /* Project object */;
 }
