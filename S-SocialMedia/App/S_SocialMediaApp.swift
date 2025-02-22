@@ -10,8 +10,6 @@ import SwiftUI
 @main
 struct S_SocialMediaApp: App {
     var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+        MainScene()
     }
 }
