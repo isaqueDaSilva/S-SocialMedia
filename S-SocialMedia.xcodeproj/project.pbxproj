@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7E03018B2D66E1BB00C9FD42 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 7E03018A2D66E1BB00C9FD42 /* Supabase */; };
+		7EC6EB9C2D68F7320069F70B /* ErrorWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 7EC6EB9B2D68F7320069F70B /* ErrorWrapper */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E03018B2D66E1BB00C9FD42 /* Supabase in Frameworks */,
+				7EC6EB9C2D68F7320069F70B /* ErrorWrapper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +81,7 @@
 			name = "S-SocialMedia";
 			packageProductDependencies = (
 				7E03018A2D66E1BB00C9FD42 /* Supabase */,
+				7EC6EB9B2D68F7320069F70B /* ErrorWrapper */,
 			);
 			productName = "S-SocialMedia";
 			productReference = 7E03013D2D66609600C9FD42 /* S-SocialMedia.app */;
@@ -110,6 +113,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				7E0301882D66E1A300C9FD42 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				7EC6EB9A2D68F7320069F70B /* XCRemoteSwiftPackageReference "ErrorWrapper" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7E03013E2D66609600C9FD42 /* Products */;
@@ -353,6 +357,14 @@
 				minimumVersion = 2.5.1;
 			};
 		};
+		7EC6EB9A2D68F7320069F70B /* XCRemoteSwiftPackageReference "ErrorWrapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/isaqueDaSilva/ErrorWrapper";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.7;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -360,6 +372,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7E0301882D66E1A300C9FD42 /* XCRemoteSwiftPackageReference "supabase-swift" */;
 			productName = Supabase;
+		};
+		7EC6EB9B2D68F7320069F70B /* ErrorWrapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7EC6EB9A2D68F7320069F70B /* XCRemoteSwiftPackageReference "ErrorWrapper" */;
+			productName = ErrorWrapper;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

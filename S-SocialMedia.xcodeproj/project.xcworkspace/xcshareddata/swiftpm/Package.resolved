@@ -1,6 +1,15 @@
 {
-  "originHash" : "ccc727310637079b7355ccf59e7d153c26677020c1a43e177b78cc9df7963c0f",
+  "originHash" : "b78576b4f61d1ef1312350776a3613846cba5bf412f468f059676ad99d55bb9a",
   "pins" : [
+    {
+      "identity" : "errorwrapper",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/isaqueDaSilva/ErrorWrapper",
+      "state" : {
+        "revision" : "8272eb3005d6d09fb459ec21313fe2c9053933ae",
+        "version" : "1.0.7"
+      }
+    },
     {
       "identity" : "supabase-swift",
       "kind" : "remoteSourceControl",
