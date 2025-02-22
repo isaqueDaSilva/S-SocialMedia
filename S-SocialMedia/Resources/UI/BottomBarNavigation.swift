@@ -11,6 +11,7 @@ struct SecondaryLabel: View {
     let primaryText: String
     let secondaryText: String
     
+    
     var body: some View {
         HStack(spacing: 5) {
             Text(primaryText)
@@ -18,7 +19,7 @@ struct SecondaryLabel: View {
                 .fontWeight(.semibold)
         }
         .font(.subheadline)
-        .foregroundStyle(.black)
+        .foregroundStyle(.primary)
     }
 }
 

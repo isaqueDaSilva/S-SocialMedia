@@ -8,16 +8,18 @@
 import SwiftUI
 
 struct UserProfileRow: View {
+    let user: UserProfile
+    
     var body: some View {
         HStack {
-            UserProfilePicture()
+            UserProfilePicture(url: user.pictureURL)
             
             VStack(alignment: .leading) {
-                Text("Tim Cook")
+                Text(user.username)
                     .font(.subheadline)
                     .fontWeight(.semibold)
                 
-                Text("Today we’re proud to announce the newest member of the iPhone 16 family, iPhone 16e, our most affordable model yet.")
+                Text(user.bio ?? "")
                     .font(.subheadline)
                     .foregroundStyle(.gray)
                     .lineLimit(2)
@@ -28,5 +30,5 @@ struct UserProfileRow: View {
 }
 
 #Preview {
-    UserProfileRow()
+    UserProfileRow(user: .mock)
 }
