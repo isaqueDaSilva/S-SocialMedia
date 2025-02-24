@@ -21,7 +21,6 @@ struct UserProfilePicture: View {
                     image
                         .resizable()
                         .clipShape(Circle())
-                    
                 } placeholder: {
                     ProgressView()
                 }
