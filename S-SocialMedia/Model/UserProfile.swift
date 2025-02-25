@@ -13,39 +13,24 @@ struct UserProfile: Identifiable {
     var userID: UUID?
     var username: String
     var bio: String?
-    var profilePictureURL: String?
-    //let status: Status
-    
-    var pictureURL: URL? {
-        if let profilePictureURL {
-            return .init(string: profilePictureURL)
-        } else {
-            return nil
-        }
-    }
     
     init() {
         self.init(
             userID: nil,
             username: "",
-            bio: nil,
-            profilePictureURL: nil
+            bio: nil
         )
     }
     
     init(
         userID: UUID?,
         username: String,
-        bio: String?,
-        profilePictureURL: String?
-        //status: Status
+        bio: String?
     ) {
         self.id = .init()
         self.userID = userID
         self.username = username
         self.bio = bio
-        self.profilePictureURL = profilePictureURL
-       // self.status = status
     }
 }
 
@@ -56,7 +41,6 @@ extension UserProfile: Codable {
         case username = "username"
         case bio = "bio"
         case profilePictureURL = "profile_picture_url"
-        case status = "status"
     }
     
     func encode(to encoder: any Encoder) throws {
@@ -64,7 +48,6 @@ extension UserProfile: Codable {
         try container.encodeIfPresent(self.userID, forKey: .userID)
         try container.encode(self.username, forKey: .username)
         try container.encodeIfPresent(self.bio, forKey: .bio)
-        try container.encodeIfPresent(self.profilePictureURL, forKey: .profilePictureURL)
     }
     
     init(from decoder: any Decoder) throws {
@@ -73,8 +56,6 @@ extension UserProfile: Codable {
         self.userID = nil
         self.username = try container.decode(String.self, forKey: .username)
         self.bio = try container.decodeIfPresent(String.self, forKey: .bio)
-        self.profilePictureURL = try container.decodeIfPresent(String.self, forKey: .profilePictureURL)
-        //self.status =  try container.decode(Status.self, forKey: .status)
     }
 }
 
@@ -90,8 +71,7 @@ extension UserProfile {
     static let mock = UserProfile(
         userID: .init(),
         username: "Tim Cook",
-        bio: "Apple CEO",
-        profilePictureURL: "https://picsum.photos/200"
+        bio: "Apple CEO"
     )
 }
 #endif
