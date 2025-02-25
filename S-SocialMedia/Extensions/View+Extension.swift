@@ -8,12 +8,16 @@
 import SwiftUI
 
 extension View {
-    func textFieldDefaultStyle() -> some View {
+    func textFieldDefaultStyle(
+        backgroundColor: Color = .init(uiColor: .systemGray6),
+        padding: CGFloat = 12
+    ) -> some View {
         self
             .font(.subheadline)
-            .padding(12)
-            .background(Color(uiColor: .systemGray6))
+            .padding(padding)
+            .materialActiveAppearance(.matchWindow)
+            .background(.thinMaterial)
+            .background(backgroundColor)
             .clipShape(RoundedRectangle(cornerRadius: 10))
-            .frame(height: 44)
     }
 }
