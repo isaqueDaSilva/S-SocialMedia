@@ -24,7 +24,7 @@ struct MainScene: Scene {
                 if isSplashScreenShowing {
                     SplashScreen(isSplashViewShowing: $isSplashScreenShowing)
                 } else {
-                    ContentView()
+                    RootView()
                         .environment(authManager)
                         .environment(messagesService)
                 }
