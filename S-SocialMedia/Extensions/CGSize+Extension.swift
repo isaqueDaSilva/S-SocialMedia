@@ -20,6 +20,6 @@ extension CGSize {
         return .init(width: width, height: height)
     }
     
+    static let highSizePicture: Self = .init(width: 175, height: 175)
     static let midSizePicture: Self = .init(width: 100, height: 100)
-    static let smallSizePicture: Self = .init(width: 64, height: 64)
 }
