@@ -17,16 +17,6 @@ final class AuthManager {
     var userProfile: UserProfile?
     var isAuthenticated: Bool = false
     
-    private func getUser() async throws -> User {
-        let user = await SupabaseHandler.shared.auth.currentUser
-        
-        guard let user else {
-            throw ExecutionError.noUser
-        }
-        
-        return user
-    }
-    
     func signIn(withCredentials credentials: UserCreadentials) async throws {
         try await SupabaseHandler.shared.auth.signIn(
             email: credentials.email,
@@ -36,48 +26,11 @@ final class AuthManager {
         try await getUserProfile()
     }
     
-    func getUserProfile() async throws {
-        let currentUser = try await getUser()
-        
-        let profile: UserProfile = try await SupabaseHandler.shared.supabase
-            .from("profiles")
-            .select()
-            .eq("id", value: currentUser.id)
-            .single()
-            .execute()
-            .value
-        
-        await MainActor.run {
-            self.userProfile = profile
-            self.isAuthenticated = true
-        }
-    }
-    
     func signUp(withCredentials credentials: UserCreadentials) async throws {
         try await SupabaseHandler.shared.auth.signUp(
             email: credentials.email,
             password: credentials.password
         )
-    }
-    
-    func createProfile(with profileFields: UserProfile) async throws {
-        let currentUser = try await getUser()
-        
-        var profile = profileFields
-        profile.userID = currentUser.id
-        
-        let userProfile: UserProfile = try await SupabaseHandler.shared.supabase
-            .from("profiles")
-            .insert(profile)
-            .select()
-            .single()
-            .execute()
-            .value
-        
-        await MainActor.run {
-            self.userProfile = userProfile
-            self.isAuthenticated = true
-        }
     }
     
     func signOut() async throws {
@@ -108,6 +61,81 @@ final class AuthManager {
                     self.isAuthenticated = session?.user != nil
                 }
             }
+        }
+    }
+    
+    private func getUser() async throws -> User {
+        let user = await SupabaseHandler.shared.auth.currentUser
+        
+        guard let user else {
+            throw ExecutionError.noUser
+        }
+        
+        return user
+    }
+    
+    func createProfile(with profileFields: UserProfile) async throws {
+        let currentUser = try await getUser()
+        
+        var profile = profileFields
+        profile.userID = currentUser.id
+        
+        let userProfile: UserProfile = try await SupabaseHandler.shared.supabase
+            .from("profiles")
+            .insert(profile)
+            .select()
+            .single()
+            .execute()
+            .value
+        
+        await MainActor.run {
+            self.userProfile = userProfile
+            self.isAuthenticated = true
+        }
+    }
+    
+    func getUserProfile() async throws {
+        let currentUser = try await getUser()
+        
+        let profile: UserProfile = try await SupabaseHandler.shared.supabase
+            .from("profiles")
+            .select()
+            .eq("id", value: currentUser.id)
+            .single()
+            .execute()
+            .value
+        
+        await MainActor.run {
+            self.userProfile = profile
+            self.isAuthenticated = true
+        }
+    }
+    
+    func isProfileUpdated(
+        username: String,
+        bio: String
+    ) -> Bool {
+        (userProfile?.username != username) && !username.isEmpty ||
+        userProfile?.bio != bio
+    }
+    
+    func updateUserProfile(
+        username: String?,
+        bio: String?
+    ) async throws {
+        let currentUser = try await getUser()
+        
+        let profile: UserProfile = try await SupabaseHandler.shared.supabase
+            .from("profiles")
+            .update(["bio": bio, "username": username])
+            .eq("id", value: currentUser.id)
+            .select()
+            .single()
+            .execute()
+            .value
+        
+        await MainActor.run {
+            self.userProfile = profile
         }
     }
 }
