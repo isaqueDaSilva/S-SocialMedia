@@ -18,7 +18,7 @@ struct SplashScreen: View {
     
     var body: some View {
         ZStack {
-            Image(resource: .logoSplashScreen, size: .midSizePicture)
+            Image(resource: .logoSplashScreen, size: .highSizePicture)
                 .resizable()
                 .scaledToFit()
                 .frame(
@@ -31,11 +31,20 @@ struct SplashScreen: View {
             
             Circle()
                 .trim(from: 0.0, to: CGFloat(cicleCount) / 2)
-                .stroke(style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
+                .stroke(
+                    style: StrokeStyle(
+                        lineWidth: 3,
+                        lineCap: .round,
+                        lineJoin: .round
+                    )
+                )
                 .rotationEffect(Angle(degrees: -90))
                 .animation(Animation.easeInOut(duration: 1), value: cicleCount)
                 .opacity(cicleOpacity)
-                .frame(width: 180, height: 180)
+                .frame(
+                    width: CGSize.highSizePicture.width,
+                    height: CGSize.highSizePicture.height
+                )
         }
         .opacity(viewOpacity)
         .onAppear {
