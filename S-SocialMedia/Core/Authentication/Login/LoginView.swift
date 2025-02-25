@@ -5,11 +5,12 @@
 //  Created by Isaque da Silva on 2/19/25.
 //
 
+import ErrorWrapper
 import SwiftUI
 
 struct LoginView: View {
-    @State private var email = ""
-    @State private var password = ""
+    @Environment(AuthManager.self) private var authManager
+    @State private var viewModel = ViewModel()
     
     var body: some View {
         NavigationStack {
@@ -21,15 +22,15 @@ struct LoginView: View {
                     .padding(.bottom, 5)
                 
                 loginButton
-                
-                forgotPasswordButton
             }
+            .disabled(viewModel.isLoading)
             .padding(.horizontal)
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     createAnAccountNavigation
                 }
             }
+            .errorAlert(error: $viewModel.error) { }
         }
     }
 }
@@ -40,13 +41,13 @@ extension LoginView {
         VStack(spacing: 10) {
             TextField(
                 "Insert your email here",
-                text: $email
+                text: $viewModel.credentials.email
             )
             .textFieldDefaultStyle()
             
             SecureField(
                 "Insert yur password here...",
-                text: $password
+                text: $viewModel.credentials.password
             )
             .textFieldDefaultStyle()
         }
@@ -54,15 +55,10 @@ extension LoginView {
     
     @ViewBuilder
     private var loginButton: some View {
-        PrimaryButton(title: "Login") {
-            
-        }
-    }
-    
-    @ViewBuilder
-    private var forgotPasswordButton: some View {
-        SecondaryButton(title: "Forgot Password?") {
-            
+        PrimaryButton(isLoading: $viewModel.isLoading,title: "Login") {
+            viewModel.login { credentials in
+                try await authManager.signIn(withCredentials: credentials)
+            }
         }
     }
     
@@ -76,9 +72,11 @@ extension LoginView {
                 secondaryText: "Sign Up"
             )
         }
+        .buttonStyle(.plain)
     }
 }
 
 #Preview {
     LoginView()
+        .environment(AuthManager())
 }

@@ -5,14 +5,14 @@
 //  Created by Isaque da Silva on 2/19/25.
 //
 
+import ErrorWrapper
 import SwiftUI
 
 struct RegistrationView: View {
+    @Environment(AuthManager.self) private var authManager
     @Environment(\.dismiss) private var dismiss
     
-    @State private var email = ""
-    @State private var password = ""
-    @State private var username = ""
+    @State private var viewModel = ViewModel()
     
     var body: some View {
         VStack {
@@ -24,6 +24,8 @@ struct RegistrationView: View {
             
             signUPButton
         }
+        .disabled(viewModel.isLoading)
+        .errorAlert(error: $viewModel.error) { }
         .navigationBarBackButtonHidden()
         .padding(.horizontal)
         .toolbar {
@@ -40,25 +42,34 @@ extension RegistrationView {
         VStack(spacing: 10) {
             TextField(
                 "Insert your email here",
-                text: $email
+                text: $viewModel.userCredentials.email
             )
             .textFieldDefaultStyle()
             
             SecureField(
                 "Insert yur password here...",
-                text: $password
+                text: $viewModel.userCredentials.password
             )
             .textFieldDefaultStyle()
             
-            TextField("Insert an username here...", text: $username)
-                .textFieldDefaultStyle()
+            TextField(
+                "Insert an username here...",
+                text: $viewModel.userProfile.username
+            )
+            .textFieldDefaultStyle()
+            
         }
     }
     
     @ViewBuilder
     private var signUPButton: some View {
-        PrimaryButton(title: "Sign up") {
-            
+        PrimaryButton(isLoading: $viewModel.isLoading, title: "Sign up") {
+            viewModel.createAccount { credentials in
+                try await authManager.signUp(withCredentials: credentials)
+            } createProfile: { profile in
+                try await authManager.createProfile(with: profile)
+            }
+
         }
     }
     
@@ -72,6 +83,7 @@ extension RegistrationView {
                 secondaryText: "Sign In"
             )
         }
+        .buttonStyle(.plain)
     }
 }
 
@@ -79,4 +91,5 @@ extension RegistrationView {
     NavigationStack {
         RegistrationView()
     }
+    .environment(AuthManager())
 }
