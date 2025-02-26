@@ -11,8 +11,8 @@ final actor SupabaseHandler {
     static let shared = SupabaseHandler()
     
     private let supabaseClient = SupabaseClient(
-        supabaseURL: .init(string: "https://idcvylwhbfaczprljyvy.supabase.co")!,
-        supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlkY3Z5bHdoYmZhY3pwcmxqeXZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg4OTgyNDEsImV4cCI6MjA1NDQ3NDI0MX0.tGnQBFhY4_aCjDIydx1__TEWii9KHQODGsbK1gRgpdQ"
+        supabaseURL: .init(string: "")!,
+        supabaseKey: ""
     )
     
     var auth: AuthClient {
