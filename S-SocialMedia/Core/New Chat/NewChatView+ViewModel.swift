@@ -18,6 +18,9 @@ extension NewChatView {
         var users: [UserProfile] = []
         var error: ExecutionError? = nil
         
+        @ObservationIgnored
+        private let logger = AppLogger(category: "NewChat+ViewModel")
+        
         func fetchUsers(currentUsername: String) {
             self.isLoading = true
             
@@ -35,7 +38,11 @@ extension NewChatView {
                     await MainActor.run {
                         self.users = users
                     }
+                    
+                    logger.info("The user with username \(self.username), was found. Results Quantity: \(users.count)")
                 } catch {
+                    logger.error("Fetch for user with username \(self.username) failed. Error: \(error.localizedDescription)")
+                    
                     await MainActor.run {
                         self.error = .init(
                             title: "Fetch User action failed",

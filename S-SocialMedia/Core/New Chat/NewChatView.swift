@@ -43,6 +43,7 @@ struct NewChatView: View {
                             .onTapGesture {
                                 if let currentUser = authManager.userProfile {
                                     selectedChat = .init(
+                                        currentUserID: currentUser.id,
                                         sender: currentUser,
                                         receiver: user,
                                         messages: []

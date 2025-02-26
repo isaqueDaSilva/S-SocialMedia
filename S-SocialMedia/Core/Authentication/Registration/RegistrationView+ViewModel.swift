@@ -18,6 +18,9 @@ extension RegistrationView {
         var userProfile = UserProfile()
         var isLoading = false
         
+        @ObservationIgnored
+        private let logger = AppLogger(category: "Registration+ViewModel")
+        
         func createAccount(
             signUpCompletation: @escaping (UserCreadentials) async throws -> Void,
             createProfile: @escaping(UserProfile) async throws -> Void
@@ -36,7 +39,11 @@ extension RegistrationView {
                     try await signUpCompletation(self.userCredentials)
                     
                     try await createProfile(self.userProfile)
+                    
+                    logger.info("Registration occur in correct away.")
                 } catch {
+                    logger.error("Registration Failed. Error: \(error.localizedDescription)")
+                    
                     await MainActor.run {
                         self.error = .init(
                             title: "Failed to Create Account",

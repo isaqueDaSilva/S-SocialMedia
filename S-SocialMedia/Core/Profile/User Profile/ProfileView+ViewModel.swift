@@ -22,6 +22,9 @@ extension ProfileView {
         var username = ""
         var bio = ""
         
+        @ObservationIgnored
+        private let logger = AppLogger(category: "UserProfile+ViewModel")
+        
         func set(username: String?, bio: String?) {
             self.username = username ?? "No username"
             self.bio = bio ?? "No bio"
@@ -33,7 +36,11 @@ extension ProfileView {
             Task {
                 do {
                     try await completation()
+                    
+                    logger.info("Logout made with success.")
                 } catch {
+                    logger.error("Failed to logout from account with error: \(error.localizedDescription)")
+                    
                     await MainActor.run {
                         self.error = .init(
                             title: "Logout Failure",
@@ -52,21 +59,21 @@ extension ProfileView {
             checker: @escaping (String, String) -> Bool,
             updater: @escaping (String?, String?) async throws -> Void
         ) {
+            guard checker(username, bio) else {
+                self.isEditable = false
+                return
+            }
+            
             isEditButtonLoaging = true
             
             Task {
                 do {
-                    guard checker(username, bio) else {
-                        await MainActor.run {
-                            self.isEditable = false
-                        }
-                        
-                        return
-                    }
-                    
-                    
                     try await updater(username, bio)
+                    
+                    logger.info("The \(self.username)'s profile was edit with success.")
                 } catch {
+                    logger.error("Failed to edit \(self.username)'s profile with error \(error.localizedDescription)")
+                    
                     await MainActor.run {
                         self.error = .init(
                             title: "Update Profile Failure",

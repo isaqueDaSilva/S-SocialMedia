@@ -23,7 +23,6 @@ struct UserProfileRow: View {
                     .font(.subheadline)
                     .foregroundStyle(.gray)
                     .lineLimit(2)
-                    .padding(.trailing, 10)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

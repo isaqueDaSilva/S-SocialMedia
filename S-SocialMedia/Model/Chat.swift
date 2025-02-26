@@ -17,6 +17,9 @@ final class Chat: Identifiable {
     let receiver: UserProfile
     var messages: [Message]
     
+    @ObservationIgnored
+    private let logger = AppLogger(category: "Chat")
+    
     func subscribeInChannel() {
         Task {
             let channel = await SupabaseHandler.shared.supabase.channel(id.uuidString)
@@ -29,32 +32,37 @@ final class Chat: Identifiable {
             
             await channel.subscribe()
             
+            logger.info("Subscribe in the channel \(id) with success.")
+            
             for await action in changeStream {
                 await insertMessage(withAction: action)
+                logger.info("New message was inserted with success.")
             }
         }
     }
     
     private func insertMessage(withAction action: InsertAction) async {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        
         guard let messageDecoded = try? action.decodeRecord(as: Message.DecodedMessage.self, decoder: JSONDecoder()),
               let message = messageDecoded.toMessage(currentUser: self.sender, receiverUser: self.receiver)
         else {
+            logger.error("Failed to decode message.")
+            
             return
         }
         
+        logger.info("The new message was decoded.")
+        
         await MainActor.run {
             self.messages.append(message)
+            logger.info("A new message was inserted in the collection.")
         }
     }
     
     func sendMessage(_ message: String) async throws {
         let newMessage = Message(
             chatID: id,
-            creator: sender,
-            receiver: receiver,
+            creator: self.sender,
+            receiver: self.receiver,
             message: message
         )
         
@@ -62,6 +70,8 @@ final class Chat: Identifiable {
             .from("messages")
             .insert(newMessage)
             .execute()
+        
+        logger.info("A new message was sent with success.")
     }
     
     func fetchMessages() async throws {
@@ -70,15 +80,23 @@ final class Chat: Identifiable {
             .execute()
             .value
         
+        logger.info("The messages was fetched with success. Was returned back \(messages.count) messages.")
+        
         await MainActor.run {
             self.messages = messages
         }
     }
     
-    init(id: UUID = .init(), sender: UserProfile, receiver: UserProfile, messages: [Message]) {
+    init(id: UUID = .init(), currentUserID: UUID, sender: UserProfile, receiver: UserProfile, messages: [Message]) {
+        let (userSender, userReceiver) = if currentUserID == sender.id {
+            (sender, receiver)
+        } else {
+            (receiver, sender)
+        }
+        
         self.id = id
-        self.sender = sender
-        self.receiver = receiver
+        self.sender = userSender
+        self.receiver = userReceiver
         self.messages = messages
     }
 }
@@ -100,6 +118,7 @@ extension Chat: Hashable {
 #if DEBUG
 extension Chat {
     static let mock = Chat(
+        currentUserID: .init(),
         sender: .mock,
         receiver: .mock,
         messages: [

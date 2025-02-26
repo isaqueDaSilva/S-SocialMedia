@@ -62,6 +62,10 @@ struct ChatView: View {
                 Button {
                     viewModel.sendMessage { message in
                         try await chat.sendMessage(message)
+                        
+                        await MainActor.run {
+                            scrollPosition = .init(edge: .bottom)
+                        }
                     }
                     
                     if chat.messages.isEmpty {

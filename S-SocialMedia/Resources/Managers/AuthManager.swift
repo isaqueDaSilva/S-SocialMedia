@@ -17,11 +17,16 @@ final class AuthManager {
     var userProfile: UserProfile?
     var isAuthenticated: Bool = false
     
+    @ObservationIgnored
+    private let logger = AppLogger(category: "AuthManager")
+    
     func signIn(withCredentials credentials: UserCreadentials) async throws {
         try await SupabaseHandler.shared.auth.signIn(
             email: credentials.email,
             password: credentials.password
         )
+        
+        logger.info("The sign in action was executed with success.")
         
         try await getUserProfile()
     }
@@ -31,6 +36,8 @@ final class AuthManager {
             email: credentials.email,
             password: credentials.password
         )
+        
+        logger.info("The sign up action was executed with success.")
     }
     
     func signOut() async throws {
@@ -40,15 +47,23 @@ final class AuthManager {
             self.userProfile = nil
             self.isAuthenticated = false
         }
+        
+        logger.info("The sign out action was executed with success.")
     }
     
     func checkCurrentAuthState() async throws {
-        let session = try await SupabaseHandler.shared.auth.session
+        guard let session = try? await SupabaseHandler.shared.auth.session else {
+            logger.error("The session was not founded.")
+            
+            return
+        }
         
         if !session.isExpired {
             do {
                 try await getUserProfile()
             } catch {
+                logger.error("An error occur when we try to find the user profile.")
+                
                 throw error
             }
         }
@@ -59,6 +74,8 @@ final class AuthManager {
             for await (_, session) in await SupabaseHandler.shared.auth.authStateChanges {
                 await MainActor.run {
                     self.isAuthenticated = session?.user != nil
+                    
+                    logger.info("AUTH STATE: \(session?.isExpired.description ?? "false")")
                 }
             }
         }
@@ -68,9 +85,11 @@ final class AuthManager {
         let user = await SupabaseHandler.shared.auth.currentUser
         
         guard let user else {
+            logger.error("Failed to get the user profile.")
             throw ExecutionError.noUser
         }
         
+        logger.info("The user instance was founded with success.")
         return user
     }
     
@@ -88,6 +107,8 @@ final class AuthManager {
             .execute()
             .value
         
+        logger.info("User profile was created with success.")
+        
         await MainActor.run {
             self.userProfile = userProfile
             self.isAuthenticated = true
@@ -104,6 +125,8 @@ final class AuthManager {
             .single()
             .execute()
             .value
+        
+        logger.info("User profile was founded with success.")
         
         await MainActor.run {
             self.userProfile = profile
@@ -133,6 +156,8 @@ final class AuthManager {
             .single()
             .execute()
             .value
+        
+        logger.info("User profile was updated with success.")
         
         await MainActor.run {
             self.userProfile = profile

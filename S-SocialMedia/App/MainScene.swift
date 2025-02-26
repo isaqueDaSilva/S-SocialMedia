@@ -57,7 +57,7 @@ struct MainScene: Scene {
                 authManager.checkAuthStatus()
             }
             .onChange(of: scenePhase) { _, newValue in
-                if newValue == .inactive {
+                if newValue == .background {
                     Task {
                         await SupabaseHandler.shared.supabase.removeAllChannels()
                         
