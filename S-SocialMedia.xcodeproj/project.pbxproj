@@ -8,11 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		7E03018B2D66E1BB00C9FD42 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 7E03018A2D66E1BB00C9FD42 /* Supabase */; };
+		7EB7C8052D6EC9E900FC7302 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 7EB7C8042D6EC9E900FC7302 /* README.md */; };
+		7EB7C8072D6ECAB000FC7302 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 7EB7C8062D6ECAB000FC7302 /* LICENSE */; };
 		7EC6EB9C2D68F7320069F70B /* ErrorWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 7EC6EB9B2D68F7320069F70B /* ErrorWrapper */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		7E03013D2D66609600C9FD42 /* S-SocialMedia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "S-SocialMedia.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7EB7C8042D6EC9E900FC7302 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		7EB7C8062D6ECAB000FC7302 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -39,9 +43,11 @@
 		7E0301342D66609600C9FD42 = {
 			isa = PBXGroup;
 			children = (
+				7EB7C8042D6EC9E900FC7302 /* README.md */,
 				7E03013F2D66609600C9FD42 /* S-SocialMedia */,
 				7E0301892D66E1BB00C9FD42 /* Frameworks */,
 				7E03013E2D66609600C9FD42 /* Products */,
+				7EB7C8062D6ECAB000FC7302 /* LICENSE */,
 			);
 			sourceTree = "<group>";
 		};
@@ -130,6 +136,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7EB7C8052D6EC9E900FC7302 /* README.md in Resources */,
+				7EB7C8072D6ECAB000FC7302 /* LICENSE in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
