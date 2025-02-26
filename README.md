@@ -28,7 +28,7 @@ S-SocialMedia is a basic WhatsApp clone developed to explore and implement real-
 
 - Compile and run the project on the simulator or a physical device.
 
-> Note: Before running the project, read and understand the code flow to ensure a better experience with the application. >
+> Note: Before running the project, read and understand the code flow to ensure a better experience with the application.
 
 ## Example of Use
 
