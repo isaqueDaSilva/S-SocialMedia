@@ -1,6 +1,6 @@
 # 📱 S- Social Media
 
-This project is a real-time chat application developed with SwiftUI and powered by Supabase.
+A simple and intuitive chat application.
 
 ## 🚀 Technologies Used
 
