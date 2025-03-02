@@ -21,24 +21,25 @@ extension RegistrationView {
         @ObservationIgnored
         private let logger = AppLogger(category: "Registration+ViewModel")
         
+        private func checkFields() async {
+            guard !userCredentials.email.isEmpty,
+                  !userCredentials.password.isEmpty,
+                  !userProfile.username.isEmpty
+            else {
+                return await MainActor.run {
+                    self.error = .fieldsEmpty
+                }
+            }
+        }
+        
         func createAccount(
-            signUpCompletation: @escaping (UserCreadentials) async throws -> Void,
-            createProfile: @escaping(UserProfile) async throws -> Void
+            signUpCompletation: @escaping (UserCreadentials, UserProfile) async throws -> Void
         ) {
             Task {
-                guard !userCredentials.email.isEmpty,
-                      !userCredentials.password.isEmpty,
-                      !userProfile.username.isEmpty
-                else {
-                    return await MainActor.run {
-                        self.error = .fieldsEmpty
-                    }
-                }
+                await checkFields()
                 
                 do {
-                    try await signUpCompletation(self.userCredentials)
-                    
-                    try await createProfile(self.userProfile)
+                    try await signUpCompletation(self.userCredentials, userProfile)
                     
                     logger.info("Registration occur in correct away.")
                 } catch {

@@ -1,18 +1,44 @@
-#  S-SocialMedia
+# 📱 S- Social Media
 
-## Description
+This project is a real-time chat application developed with SwiftUI and powered by Supabase.
 
-S-SocialMedia is a basic WhatsApp clone developed to explore and implement real-time chat functionalities. The project offers a simple, intuitive, and smooth interface, enabling fast communication between users.
+## 🚀 Technologies Used
 
-## Technologies Used
+- SwiftUI – Declarative UI framework for iOS.
 
-- Swift - Main language of the project
+- Supabase – Backend for authentication, database, and WebSockets.
 
-- SwiftUI - Framework for UI development
+- WebSockets – Real-time communication between users.
 
-- Supabase - Backend as a service for authentication and database
+## 📌 Features
 
-## Installation and Execution
+- 🔑 Authentication (via Supabase Auth)
+
+- 💬 Real-time messaging with WebSockets
+
+- 📲 Modern and responsive UI with SwiftUI
+
+## 🛠️ Installation and Setup
+
+### 1️⃣ Prerequisites
+
+Before starting, make sure you have installed:
+
+- Xcode 16+
+
+- Swift 6+
+
+- A Supabase account
+
+### 2️⃣ Supabase Configuration
+
+- Create a new project on Supabase
+
+- Set up the messages, profiles, and auth tables as needed.
+
+- Copy the API credentials and add them to Supabase.swift file inside the Services folder in the project.
+
+### 3️⃣ Installation and Execution
 
 - Download the project files from the repository.
 
@@ -30,15 +56,20 @@ S-SocialMedia is a basic WhatsApp clone developed to explore and implement real-
 
 > Note: Before running the project, read and understand the code flow to ensure a better experience with the application.
 
-## Example of Use
+## 📌 Next Steps
 
-Use S-SocialMedia to communicate with friends quickly and efficiently, regardless of distance.
+- 🌠 Implement users profile picture.
 
-## Contribution
+- 🧑‍🤝‍🧑 Enable Group conversation.
 
-If you would like to contribute with improvements or new features, feel free to open a Pull Request or report issues in the Issues section.
+- 🔒 Encrypty end-to-end message exchange between users.
 
-## License
+## 🤝 Contribution
 
-This project is under the MIT license.
+Feel free to submit pull requests or report issues! 😊
 
+## 📜 License
+
+This project is licensed under the MIT License. For more details, see the LICENSE file.
+
+**📌 Developed with ❤️ and Swift!**

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct InboxView: View {
     @Environment(MessageService.self) private var messageService
-    @Environment(AuthManager.self) private var authManager
+    @Environment(AuthService.self) private var authService
     
     @State private var showAddNewChat = false
     @State private var selectedChat: Chat?
@@ -30,7 +30,7 @@ struct InboxView: View {
                             InboxRow(
                                 username: chat.receiver.username,
                                 message: chat.messages.last?.message ?? "",
-                                sendedAt: chat.messages.last?.sendedAt
+                                sendedAt: chat.messages.last?.sentAt
                             )
                         }
                     }
@@ -62,21 +62,25 @@ struct InboxView: View {
             }
             .sheet(isPresented: $showAddNewChat) {
                 if let selectedChat {
-                    self.path.append(.chat(selectedChat))
+                    if let chat = messageService.isChatExist(selectedChat.receiver.username) {
+                        self.path.append(.chat(chat))
+                    } else {
+                        self.path.append(.chat(selectedChat))
+                    }
                 }
             } content: {
                 NewChatView(selectedChat: $selectedChat)
-                    .environment(authManager)
+                    .environment(authService)
             }
             .navigationDestination(for: Navigation.self) { navigation in
                 switch navigation {
                 case .chat(let chat):
-                    if let userID = authManager.userProfile?.id {
+                    if let userID = authService.userProfile?.id {
                         ChatView(currentUserID: userID, chat: chat)
                     }
                 case .userProfile:
                     ProfileView()
-                        .environment(authManager)
+                        .environment(authService)
                 }
             }
         }
@@ -85,6 +89,6 @@ struct InboxView: View {
 
 #Preview {
     InboxView()
-        .environment(AuthManager())
+        .environment(AuthService())
         .environment(MessageService())
 }

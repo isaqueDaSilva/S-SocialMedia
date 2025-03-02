@@ -9,7 +9,7 @@ import ErrorWrapper
 import SwiftUI
 
 struct LoginView: View {
-    @Environment(AuthManager.self) private var authManager
+    @Environment(AuthService.self) private var authService
     @State private var viewModel = ViewModel()
     
     var body: some View {
@@ -44,20 +44,24 @@ extension LoginView {
                 text: $viewModel.credentials.email
             )
             .textFieldDefaultStyle()
+            .textInputAutocapitalization(.never)
+            .keyboardType(.emailAddress)
+            .submitLabel(.next)
             
             SecureField(
-                "Insert yur password here...",
+                "Insert your password here...",
                 text: $viewModel.credentials.password
             )
             .textFieldDefaultStyle()
+            .submitLabel(.go)
         }
     }
     
     @ViewBuilder
     private var loginButton: some View {
-        PrimaryButton(isLoading: $viewModel.isLoading,title: "Login") {
+        PrimaryButton(isLoading: $viewModel.isLoading, title: "Login") {
             viewModel.login { credentials in
-                try await authManager.signIn(withCredentials: credentials)
+                try await authService.signIn(withCredentials: credentials)
             }
         }
     }
@@ -78,5 +82,5 @@ extension LoginView {
 
 #Preview {
     LoginView()
-        .environment(AuthManager())
+        .environment(AuthService())
 }

@@ -24,6 +24,11 @@ extension ExecutionError {
         descrition: "To execute this action you need to have an user created."
     )
     
+    static let noSession = ExecutionError(
+        title: "No Session Available",
+        descrition: "The are no session to use this aplication. Please log in the system."
+    )
+    
     static let noProfile = ExecutionError(
         title: "No Profile Available",
         descrition: "To execute this action you need to have a profile available."

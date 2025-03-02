@@ -9,7 +9,7 @@ import ErrorWrapper
 import SwiftUI
 
 struct RegistrationView: View {
-    @Environment(AuthManager.self) private var authManager
+    @Environment(AuthService.self) private var authService
     @Environment(\.dismiss) private var dismiss
     
     @State private var viewModel = ViewModel()
@@ -45,29 +45,34 @@ extension RegistrationView {
                 text: $viewModel.userCredentials.email
             )
             .textFieldDefaultStyle()
+            .textInputAutocapitalization(.never)
+            .keyboardType(.emailAddress)
+            .submitLabel(.next)
             
             SecureField(
                 "Insert yur password here...",
                 text: $viewModel.userCredentials.password
             )
             .textFieldDefaultStyle()
+            .submitLabel(.next)
             
             TextField(
                 "Insert an username here...",
                 text: $viewModel.userProfile.username
             )
             .textFieldDefaultStyle()
-            
+            .submitLabel(.go)
         }
     }
     
     @ViewBuilder
     private var signUPButton: some View {
         PrimaryButton(isLoading: $viewModel.isLoading, title: "Sign up") {
-            viewModel.createAccount { credentials in
-                try await authManager.signUp(withCredentials: credentials)
-            } createProfile: { profile in
-                try await authManager.createProfile(with: profile)
+            viewModel.createAccount { credentials, profile in
+                try await authService.signUp(
+                    withCredentials: credentials,
+                    profile: profile
+                )
             }
 
         }
@@ -91,5 +96,5 @@ extension RegistrationView {
     NavigationStack {
         RegistrationView()
     }
-    .environment(AuthManager())
+    .environment(AuthService())
 }

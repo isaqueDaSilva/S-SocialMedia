@@ -9,23 +9,23 @@ import SwiftUI
 
 struct RootView: View {
     @Environment(MessageService.self) private var messageService
-    @Environment(AuthManager.self) private var authManager
+    @Environment(AuthService.self) private var authService
     
     var body: some View {
         Group {
-            if authManager.isAuthenticated {
+            if authService.isAuthenticated {
                 InboxView()
                     .environment(messageService)
             } else {
                 LoginView()
             }
         }
-        .environment(authManager)
+        .environment(authService)
     }
 }
 
 #Preview {
     RootView()
-        .environment(AuthManager())
+        .environment(AuthService())
         .environment(MessageService())
 }

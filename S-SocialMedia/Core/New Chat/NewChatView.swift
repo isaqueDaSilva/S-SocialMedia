@@ -11,7 +11,7 @@ import SwiftUI
 struct NewChatView: View {
     @Binding var selectedChat: Chat?
     
-    @Environment(AuthManager.self) private var authManager
+    @Environment(AuthService.self) private var authService
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel = ViewModel()
     
@@ -36,12 +36,14 @@ struct NewChatView: View {
                                 username: user.username,
                                 text: user.bio ?? ""
                             )
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contentShape(Rectangle())
                             .listRowSeparator(
                                 user.id == viewModel.users.first?.id ? .hidden : .visible ,
                                 edges: .top
                             )
                             .onTapGesture {
-                                if let currentUser = authManager.userProfile {
+                                if let currentUser = authService.userProfile {
                                     selectedChat = .init(
                                         currentUserID: currentUser.id,
                                         sender: currentUser,
@@ -52,6 +54,7 @@ struct NewChatView: View {
                                     dismiss()
                                 }
                             }
+                            
                         }
                     }
                 }
@@ -62,7 +65,7 @@ struct NewChatView: View {
             )
             .onSubmit(of: .search) {
                 viewModel.fetchUsers(
-                    currentUsername: authManager.userProfile?.username ?? ""
+                    currentUsername: authService.userProfile?.username ?? ""
                 )
             }
             .errorAlert(error: $viewModel.error) { }
@@ -84,5 +87,5 @@ struct NewChatView: View {
 
 #Preview {
     NewChatView(selectedChat: .constant(nil))
-        .environment(AuthManager())
+        .environment(AuthService())
 }

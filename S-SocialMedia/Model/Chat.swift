@@ -20,9 +20,14 @@ final class Chat: Identifiable {
     @ObservationIgnored
     private let logger = AppLogger(category: "Chat")
     
+    @ObservationIgnored
+    private var subscriptionTask: Task<Void, Never>?
+    
     func subscribeInChannel() {
-        Task {
-            let channel = await SupabaseHandler.shared.supabase.channel(id.uuidString)
+        subscriptionTask?.cancel()
+        
+        subscriptionTask = Task {
+            let channel = SupabaseHandler.shared.supabase.channel(id.uuidString)
             
             let changeStream = channel.postgresChange(
                 InsertAction.self,
@@ -41,20 +46,30 @@ final class Chat: Identifiable {
         }
     }
     
+    func removeSubscription() {
+        guard subscriptionTask != nil else { return }
+        
+        subscriptionTask = nil
+        
+        logger.info("Chat subscrition removed with success.")
+    }
+    
     private func insertMessage(withAction action: InsertAction) async {
-        guard let messageDecoded = try? action.decodeRecord(as: Message.DecodedMessage.self, decoder: JSONDecoder()),
-              let message = messageDecoded.toMessage(currentUser: self.sender, receiverUser: self.receiver)
-        else {
-            logger.error("Failed to decode message.")
+        do {
+            let messageDecoded = try action.decodeRecord(as: Message.DecodedMessage.self, decoder: JSONDecoder())
+            guard let message = messageDecoded.toMessage(currentUser: self.sender, receiverUser: self.receiver) else {
+                logger.info("The message cannot be added to the stack, because it's value is nil.")
+                return
+            }
             
-            return
-        }
-        
-        logger.info("The new message was decoded.")
-        
-        await MainActor.run {
-            self.messages.append(message)
-            logger.info("A new message was inserted in the collection.")
+            logger.info("The new message was decoded.")
+            
+            await MainActor.run {
+                self.messages.append(message)
+                logger.info("A new message was inserted in the collection.")
+            }
+        } catch {
+            logger.error("Failed to decode or add message to the stack: \(error.localizedDescription)")
         }
     }
     

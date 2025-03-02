@@ -1,5 +1,5 @@
 //
-//  AuthManager.swift
+//  AuthService.swift
 //  S-SocialMedia
 //
 //  Created by Isaque da Silva on 2/20/25.
@@ -13,12 +13,15 @@ import Supabase
 
 @Observable
 @MainActor
-final class AuthManager {
+final class AuthService {
     var userProfile: UserProfile?
     var isAuthenticated: Bool = false
     
     @ObservationIgnored
     private let logger = AppLogger(category: "AuthManager")
+    
+    @ObservationIgnored
+    private var subscriptionTask: Task<Void, Never>?
     
     func signIn(withCredentials credentials: UserCreadentials) async throws {
         try await SupabaseHandler.shared.auth.signIn(
@@ -31,11 +34,13 @@ final class AuthManager {
         try await getUserProfile()
     }
     
-    func signUp(withCredentials credentials: UserCreadentials) async throws {
-        try await SupabaseHandler.shared.auth.signUp(
+    func signUp(withCredentials credentials: UserCreadentials, profile: UserProfile) async throws {
+        let authResponse = try await SupabaseHandler.shared.auth.signUp(
             email: credentials.email,
             password: credentials.password
         )
+        
+        try await createProfile(with: profile, userID: authResponse.user.id)
         
         logger.info("The sign up action was executed with success.")
     }
@@ -54,7 +59,6 @@ final class AuthManager {
     func checkCurrentAuthState() async throws {
         guard let session = try? await SupabaseHandler.shared.auth.session else {
             logger.error("The session was not founded.")
-            
             return
         }
         
@@ -69,13 +73,18 @@ final class AuthManager {
         }
     }
     
-    func checkAuthStatus() {
-        Task {
+    func checkAuthStatusChanges() {
+        subscriptionTask?.cancel()
+        
+        subscriptionTask = Task {
             for await (_, session) in await SupabaseHandler.shared.auth.authStateChanges {
-                await MainActor.run {
-                    self.isAuthenticated = session?.user != nil
-                    
-                    logger.info("AUTH STATE: \(session?.isExpired.description ?? "false")")
+                let isAuthenticated = session?.user != nil
+                
+                if self.isAuthenticated != isAuthenticated {
+                    await MainActor.run {
+                        self.isAuthenticated = isAuthenticated
+                    }
+                    logger.info("Auth state changed: \(isAuthenticated)")
                 }
             }
         }
@@ -93,11 +102,9 @@ final class AuthManager {
         return user
     }
     
-    func createProfile(with profileFields: UserProfile) async throws {
-        let currentUser = try await getUser()
-        
+    private func createProfile(with profileFields: UserProfile, userID: UUID) async throws {
         var profile = profileFields
-        profile.userID = currentUser.id
+        profile.userID = userID
         
         let userProfile: UserProfile = try await SupabaseHandler.shared.supabase
             .from("profiles")
@@ -116,6 +123,8 @@ final class AuthManager {
     }
     
     func getUserProfile() async throws {
+        guard userProfile == nil else { return }
+        
         let currentUser = try await getUser()
         
         let profile: UserProfile = try await SupabaseHandler.shared.supabase
@@ -138,8 +147,7 @@ final class AuthManager {
         username: String,
         bio: String
     ) -> Bool {
-        (userProfile?.username != username) && !username.isEmpty ||
-        userProfile?.bio != bio
+        ((userProfile?.username != username) && !username.isEmpty) || (userProfile?.bio != bio)
     }
     
     func updateUserProfile(
@@ -148,9 +156,21 @@ final class AuthManager {
     ) async throws {
         let currentUser = try await getUser()
         
+        var updatedFields = [String: String]()
+        
+        if let username, (username != userProfile?.username) {
+            updatedFields["username"] = username
+        }
+        
+        if let bio, (bio != userProfile?.bio) {
+            updatedFields[bio] = bio
+        }
+        
+        guard !updatedFields.isEmpty else { return }
+        
         let profile: UserProfile = try await SupabaseHandler.shared.supabase
             .from("profiles")
-            .update(["bio": bio, "username": username])
+            .update(updatedFields)
             .eq("id", value: currentUser.id)
             .select()
             .single()

@@ -10,7 +10,7 @@ import SwiftUI
 import PhotosUI
 
 struct ProfileView: View {
-    @Environment(AuthManager.self) private var authManager
+    @Environment(AuthService.self) private var authService
     
     @State private var viewModel = ViewModel()
     
@@ -33,12 +33,12 @@ struct ProfileView: View {
             Button {
                 if viewModel.isEditable {
                     viewModel.updateProfile { username, bio in
-                        authManager.isProfileUpdated(
+                        authService.isProfileUpdated(
                             username: username,
                             bio: bio
                         )
                     } updater: { username, bio in
-                        try await authManager.updateUserProfile(
+                        try await authService.updateUserProfile(
                             username: username,
                             bio: bio
                         )
@@ -58,8 +58,8 @@ struct ProfileView: View {
         }
         .onAppear {
             self.viewModel.set(
-                username: self.authManager.userProfile?.username,
-                bio: self.authManager.userProfile?.bio
+                username: self.authService.userProfile?.username,
+                bio: self.authService.userProfile?.bio
             )
         }
         .alert(
@@ -68,13 +68,13 @@ struct ProfileView: View {
         ) {
             Button(role: .destructive) {
                 viewModel.logout {
-                    try await authManager.signOut()
+                    try await authService.signOut()
                 }
             } label: {
                 if viewModel.isLogoutButtonLoading {
                     ProgressView()
                 } else {
-                    Text("Delete")
+                    Text("OK")
                 }
             }
         }
@@ -115,6 +115,6 @@ extension ProfileView {
 #Preview {
     NavigationStack {
         ProfileView()
-            .environment(AuthManager())
+            .environment(AuthService())
     }
 }

@@ -16,7 +16,7 @@ struct PrimaryButton: View {
     var body: some View {
         Button {
             self.isLoading = true
-            print(isLoading.description)
+            
             Task {
                 await action()
                 
@@ -42,6 +42,12 @@ struct PrimaryButton: View {
         }
         .disabled(isLoading)
         .opacity(isLoading ? 0.7 : 1)
+    }
+    
+    init(isLoading: Binding<Bool>, title: String, action: @escaping () async -> Void) {
+        self._isLoading = isLoading
+        self.title = title
+        self.action = action
     }
 }
 
