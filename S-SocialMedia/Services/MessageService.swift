@@ -14,7 +14,13 @@ final class MessageService {
     private var chatsDictionary = [UUID: Chat]()
     
     var chats: [Chat] {
-        chatsDictionary.toArray
+        chatsDictionary.toArray.sorted { m1, m2 in
+            guard let message1 = m1.messages.last,
+                  let message2 = m2.messages.last
+            else { return true }
+         
+            return message1.sentAt > message2.sentAt
+        }
     }
     
     private var isChannelsOn = false
