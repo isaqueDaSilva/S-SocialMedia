@@ -64,6 +64,9 @@ Before starting, make sure you have installed:
 
 - 🔒 Encrypty end-to-end message exchange between users.
 
+## ⛓️‍💥 Known Bugs
+- When we add a new chat, it's don't tracked and add to the inbox view.
+
 ## 📜 License
 
 This project is licensed under the MIT License. For more details, see the LICENSE file.
