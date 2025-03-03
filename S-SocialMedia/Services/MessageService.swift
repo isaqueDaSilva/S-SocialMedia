@@ -26,7 +26,7 @@ final class MessageService {
     private var isChannelsOn = false
     
     @ObservationIgnored
-    private let logger = AppLogger(category: "AuthManager")
+    private let logger = AppLogger(category: "AuthManager1")
     
     func isChatExist(_ username: String) -> Chat? {
         chats.first(where: { $0.receiver.username == username })
