@@ -67,10 +67,6 @@ struct ChatView: View {
                             scrollPosition = .init(edge: .bottom)
                         }
                     }
-                    
-                    if chat.messages.isEmpty {
-                        chat.subscribeInChannel()
-                    }
                 } label: {
                     Group {
                         if viewModel.isLoading {

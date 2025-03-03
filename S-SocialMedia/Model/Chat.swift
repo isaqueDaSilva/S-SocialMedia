@@ -32,7 +32,8 @@ final class Chat: Identifiable {
             let changeStream = channel.postgresChange(
                 InsertAction.self,
                 schema: "public",
-                table: "messages"
+                table: "messages",
+                filter: "chat_id=eq.\(self.id)"
             )
             
             await channel.subscribe()
@@ -87,6 +88,14 @@ final class Chat: Identifiable {
             .execute()
         
         logger.info("A new message was sent with success.")
+        
+        
+        if subscriptionTask == nil {
+            await MainActor.run {
+                self.messages.append(newMessage)
+            }
+            self.subscribeInChannel()
+        }
     }
     
     func fetchMessages() async throws {
