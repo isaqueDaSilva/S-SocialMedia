@@ -163,7 +163,7 @@ final class AuthService {
         }
         
         if let bio, (bio != userProfile?.bio) {
-            updatedFields[bio] = bio
+            updatedFields["bio"] = bio
         }
         
         guard !updatedFields.isEmpty else { return }
